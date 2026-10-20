@@ -23,9 +23,10 @@ class Settings(BaseSettings):
         "http://localhost:3000",
     ]
 
-    # OCR Settings & Resource Optimization (Ideal para Raspberry Pi 5 / Dokploy)
-    OCR_ENGINE: str = "auto"
-    OCR_NUM_THREADS: int = 2
+    # OCR Settings & Resource Optimization (Optimizado para Raspberry Pi 5 / Dokploy)
+    OCR_ENGINE: str = "auto"  # 'auto', 'tesseract' o 'easyocr'
+    OCR_NUM_THREADS: int = 4
+    EASYOCR_CANVAS_SIZE: int = 1280
     IMAGE_MAX_DIMENSION: int = 1600
     MAX_IMAGE_SIZE_MB: int = 10
     ALLOWED_IMAGE_EXTENSIONS: Set[str] = {".png", ".jpg", ".jpeg", ".webp"}

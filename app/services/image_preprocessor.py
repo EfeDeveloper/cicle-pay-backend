@@ -16,7 +16,6 @@ def preprocess_image(
     max_dimension: int = None,
     enhance_contrast: bool = True,
 ) -> Tuple[Image.Image, Tuple[int, int]]:
-    max_dimension = max_dimension or settings.IMAGE_MAX_DIMENSION
     """
     Carga y preprocesa los bytes de una imagen para optimizar la detección OCR.
     
@@ -28,6 +27,7 @@ def preprocess_image(
     Retorna:
         Tuple[Image.Image, Tuple[int, int]]: Imagen procesada y tamaño (ancho, alto).
     """
+    max_dimension = max_dimension or settings.IMAGE_MAX_DIMENSION
     if not image_bytes:
         raise ImagePreprocessingError("El archivo de imagen está vacío.")
 
