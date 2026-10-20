@@ -5,6 +5,8 @@ import warnings
 from typing import List, Optional
 import certifi
 from PIL import Image
+import torch
+from app.core.config import settings
 from app.schemas.ocr import OcrTextResponse
 from app.services.image_preprocessor import preprocess_image
 
@@ -20,6 +22,7 @@ class OcrService:
     """
     Servicio de extracción óptica de caracteres (OCR) para facturas y recibos
     usando EasyOCR (100% Python/PyTorch, sin dependencias a nivel de sistema host).
+    Optimizado para hardware de bajo consumo y SBC como Raspberry Pi 5.
     """
 
     def __init__(self):
@@ -27,9 +30,17 @@ class OcrService:
 
     def _get_reader(self):
         if self._reader is None:
+            # Limitar el número de hilos de PyTorch para no saturar todos los núcleos de la CPU
+            if settings.OCR_NUM_THREADS > 0:
+                torch.set_num_threads(settings.OCR_NUM_THREADS)
+                try:
+                    torch.set_num_interop_threads(1)
+                except RuntimeError:
+                    pass
+
             import easyocr
-            # Inicializar con soporte para español e inglés en modo CPU/MPS
-            self._reader = easyocr.Reader(["es", "en"], gpu=False)
+            # Inicializar con soporte para español e inglés en modo CPU sin logs ruidosos
+            self._reader = easyocr.Reader(["es", "en"], gpu=False, verbose=False)
         return self._reader
 
     def _extract_text(self, processed_bytes: bytes) -> List[str]:

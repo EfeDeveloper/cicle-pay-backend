@@ -8,11 +8,15 @@ class ImagePreprocessingError(Exception):
     pass
 
 
+from app.core.config import settings
+
+
 def preprocess_image(
     image_bytes: bytes,
-    max_dimension: int = 2400,
+    max_dimension: int = None,
     enhance_contrast: bool = True,
 ) -> Tuple[Image.Image, Tuple[int, int]]:
+    max_dimension = max_dimension or settings.IMAGE_MAX_DIMENSION
     """
     Carga y preprocesa los bytes de una imagen para optimizar la detección OCR.
     
