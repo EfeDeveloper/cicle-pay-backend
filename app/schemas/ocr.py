@@ -30,3 +30,8 @@ class OcrTextResponse(BaseModel):
         ...,
         description="Tiempo de procesamiento del OCR en milisegundos",
     )
+    engine: Optional[str] = Field(
+        default=None,
+        description="Motor OCR utilizado ('tesseract' o 'easyocr')",
+    )
+

@@ -9,10 +9,10 @@ python-multipart>=0.0.18
 # Async HTTP Client for Ollama
 httpx>=0.28.0
 
-# Image handling & OCR
+# Image handling & OCR (Tesseract nativo C++)
 pillow>=11.0.0
-easyocr>=1.7.2
 pytesseract>=0.3.10
+
 
 # Testing
 pytest>=8.3.0

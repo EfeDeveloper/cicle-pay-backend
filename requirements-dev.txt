@@ -1,0 +1,5 @@
+# Dependencias base de producción
+-r requirements.txt
+
+# OCR para desarrollo local sin binario Tesseract en host
+easyocr>=1.7.2

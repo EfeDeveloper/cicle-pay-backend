@@ -1,6 +1,5 @@
 [phases.setup]
-nixPkgs = ["...", "tesseract"]
-
+aptPkgs = ["...", "tesseract-ocr", "tesseract-ocr-spa"]
 
 [start]
 cmd = "fastapi run app/main.py --port 8000"
