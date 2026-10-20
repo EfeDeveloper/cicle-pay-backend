@@ -1,5 +1,8 @@
+providers = ["...", "python"]
+
 [phases.setup]
-nixPkgs = ["tesseract"]
+nixPkgs = ["...", "tesseract"]
+
 
 [start]
 cmd = "fastapi run app/main.py --port 8000"
