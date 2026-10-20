@@ -1,0 +1,75 @@
+schema: spec-driven
+githubCopilot:
+  cloudAgent: false
+
+# Único archivo de producto para el backend.
+# Stack, convenciones y dominio viven SOLO aquí. No pongas stack ni dominio en los agentes.
+context: |
+  Product: CyclePay Backend — Scalable backend service for the CyclePay ecosystem.
+  Scope & Evolution: A modular, extensible backend designed to grow with new capabilities
+  over time. Initial capability is OCR processing and AI-powered contract extraction for
+  CyclePay expenses, but the architecture must remain decoupled and extensible for future
+  modules (webhooks, sync, notifications, data export, etc.).
+
+  Stack: Python 3.13+, FastAPI, Uvicorn, Pydantic v2, pydantic-settings, HTTPX.
+  Deployment: Standalone containerized service for Dokploy / Linux environment.
+  Zero host-system dependencies (no brew or system binary locks).
+  
+  Integration with CyclePay Frontend:
+  - Generates JSON payloads strictly matching CyclePay contracts:
+    1. ExpenseTemplate (recurring definitions):
+       - name: string (required)
+       - amount: number > 0 (required)
+       - category: string (required, one of the 10 strict categories)
+       - description: string max 140 chars (optional, omit if empty)
+       - dueDay: integer 1–31 or null (optional)
+       - isActive: boolean (default true)
+       - Never include: status, periodKey, paidAt, source
+    2. MonthlyExpense / CreateManualExpenseInput (monthly instances):
+       - name: string (required)
+       - amount: number > 0 (required)
+       - category: string (required, one of the 10 strict categories)
+       - description: string max 140 chars (optional, omit if empty)
+       - dueDay: integer 1–31 or null (optional)
+       - periodKey: string format YYYY-MM (required)
+       - status: 'pending' | 'paid' (required)
+       - source: 'manual'
+       - templateId: null
+  
+  Categories (strict):
+    Vivienda, Servicios, Alimentación, Transporte, Salud,
+    Educación, Entretenimiento, Seguros, Suscripciones, Otros.
+
+  AI & OCR Services:
+  - Local AI Server: Ollama at http://192.168.0.148:11434 (e.g. qwen2.5-coder:3b).
+  - Validation: Pydantic v2 guarantees schema validity before returning responses.
+
+rules:
+  proposal:
+    - Include a Non-goals section.
+    - State which backend modules or capability domains are touched.
+    - Call out compatibility with CyclePay frontend contracts.
+    - Keep the proposal under ~500 words.
+  spec:
+    - Use Given/When/Then scenarios.
+    - Preserve existing capability paths under openspec/specs/.
+    - Strict validation: amounts must be positive numbers, categories in allowed set, dueDay 1–31.
+    - Specs are deltas against main specs.
+  design:
+    - Modular architecture under app/ (core, schemas, services, api).
+    - Asynchronous I/O for HTTP/AI calls (httpx.AsyncClient).
+    - Zero host-system binary dependencies.
+  tasks:
+    - One checkbox per small, reviewable step.
+    - Tag tasks that need developer with [dev] and testing with [test].
+
+operations:
+  apply:
+    guidance:
+      - Read openspec/config.yaml before implementing. It is the product source of truth.
+      - Implement incrementally, completing and validating task by task.
+      - Run automated tests before considering tasks done.
+  archive:
+    guidance:
+      - Summarize what landed vs the proposal in a few bullets before finishing.
+      - Confirm main specs were updated (or synced) for the archived change.
