@@ -16,25 +16,16 @@ context: |
   Zero host-system dependencies (no brew or system binary locks).
   
   Integration with CyclePay Frontend:
-  - Generates JSON payloads strictly matching CyclePay contracts:
-    1. ExpenseTemplate (recurring definitions):
-       - name: string (required)
-       - amount: number > 0 (required)
-       - category: string (required, one of the 10 strict categories)
-       - description: string max 140 chars (optional, omit if empty)
-       - dueDay: integer 1–31 or null (optional)
-       - isActive: boolean (default true)
-       - Never include: status, periodKey, paidAt, source
-    2. MonthlyExpense / CreateManualExpenseInput (monthly instances):
-       - name: string (required)
-       - amount: number > 0 (required)
-       - category: string (required, one of the 10 strict categories)
-       - description: string max 140 chars (optional, omit if empty)
-       - dueDay: integer 1–31 or null (optional)
-       - periodKey: string format YYYY-MM (required)
-       - status: 'pending' | 'paid' (required)
-       - source: 'manual'
-       - templateId: null
+  - Generates JSON payloads strictly matching CyclePay contracts for additional expenses (CreateManualExpenseInput / MonthlyExpense):
+    - name: string (required, invoice or merchant/expense name)
+    - amount: number > 0 (required, total amount)
+    - category: string (required, one of the 10 strict categories)
+    - description: string max 140 chars (optional, brief breakdown or detail)
+    - dueDay: integer 1–31 or null (optional, payment day or issue day)
+    - periodKey: string format YYYY-MM (required, period of the expense)
+    - status: 'pending' | 'paid' (required, 'paid' if receipt/payment confirmed, otherwise 'pending')
+    - source: 'manual'
+    - templateId: null
   
   Categories (strict):
     Vivienda, Servicios, Alimentación, Transporte, Salud,
@@ -50,10 +41,10 @@ rules:
     - State which backend modules or capability domains are touched.
     - Call out compatibility with CyclePay frontend contracts.
     - Keep the proposal under ~500 words.
-  spec:
+  specs:
     - Use Given/When/Then scenarios.
     - Preserve existing capability paths under openspec/specs/.
-    - Strict validation: amounts must be positive numbers, categories in allowed set, dueDay 1–31.
+    - "Strict validation: amounts must be positive numbers, categories in allowed set, dueDay 1–31."
     - Specs are deltas against main specs.
   design:
     - Modular architecture under app/ (core, schemas, services, api).

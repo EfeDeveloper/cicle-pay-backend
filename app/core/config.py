@@ -23,6 +23,11 @@ class Settings(BaseSettings):
         "http://localhost:3000",
     ]
 
+    # Ollama AI Settings
+    OLLAMA_BASE_URL: str = "http://192.168.0.148:11434"
+    OLLAMA_MODEL: str = "qwen2.5-coder:3b"
+    OLLAMA_TIMEOUT_SECONDS: float = 60.0
+
     # OCR Settings & Resource Optimization (Optimizado para Raspberry Pi 5 / Dokploy)
     OCR_ENGINE: str = "auto"  # 'auto', 'tesseract' o 'easyocr'
     OCR_NUM_THREADS: int = 4
